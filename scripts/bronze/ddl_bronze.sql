@@ -1,3 +1,10 @@
+/*
+Purpose:
+This script drops and recreates staging (bronze layer) tables used for loading CRM and ERP data.
+The tables include customer info, product details, sales transactions, location data, and pricing categories.
+This setup supports the initial raw data ingestion layer in the data pipeline.
+*/
+
 if object_id('bronze.crm_cust_info', 'u') is not null
 begin
     drop table bronze.crm_cust_info;
