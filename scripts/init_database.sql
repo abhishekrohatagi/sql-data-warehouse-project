@@ -1,45 +1,50 @@
 /*
-===========================================================
-Create Database and Schemas
-===========================================================
-
-Script Purpose:
-    This script creates a new database named 'data_warehouse' after checking if it already exists.
-    If the database exists, it is dropped and recreated. Additionally, the script sets up three schemas
-    within the database: 'bronze', 'silver', and 'gold'.
-
-WARNING:
-    Running this script will DROP the entire 'data_warehouse' database if it exists.
-    All data in the database will be permanently deleted. 
-    Proceed with caution and ensure you have proper backups before running this script.
+Purpose:
+This script creates a new 'data_warehouse' database and initializes three schemas: bronze, silver, and gold.
+It drops any existing version of the database and schemas to ensure a clean setup for the data warehousing pipeline.
 */
 
--- Switch to master context
-USE master;
-GO
+use master;
+go
 
--- Drop the database if it exists
-IF DB_ID('data_warehouse') IS NOT NULL
-BEGIN
-    DROP DATABASE data_warehouse;
-END
-GO
+if db_id('data_warehouse') is not null
+begin
+    drop database data_warehouse;
+end
+go
 
--- Create the database
-CREATE DATABASE data_warehouse;
-GO
+create database data_warehouse;
+go
 
--- Switch to the newly created database
-USE data_warehouse;
-GO
 
--- Create the schemas
-CREATE SCHEMA bronze;
-GO
+use data_warehouse;
+go
 
-CREATE SCHEMA silver;
-GO
 
-CREATE SCHEMA gold;
-GO
+if exists (select * from sys.schemas where name = 'bronze')
+begin
+    exec('drop schema bronze');
+end
+go
+
+exec('create schema bronze');
+go
+
+if exists (select * from sys.schemas where name = 'silver')
+begin
+    exec('drop schema silver');
+end
+go
+
+exec('create schema silver');
+go
+
+if exists (select * from sys.schemas where name = 'gold')
+begin
+    exec('drop schema gold');
+end
+go
+
+exec('create schema gold');
+go
 
